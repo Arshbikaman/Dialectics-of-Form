@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <title>Dialectics of Form - Point 1</title>
+  <link href="https://fonts.googleapis.com/css2?family=Helvetica:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Helvetica', sans-serif;
+      background-color: #f4f4f4;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px;
+      color: #333;
+    }
+    .meta-data {
+      width: 600px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      margin-bottom: 20px;
+      color: #666;
+    }
+    canvas {
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.min.js"></script>
+</head>
+<body>
+
+  <div class="meta-data">
+    <span>Project: Dialectics of Form (Part 1)</span>
+    <span>Date: May 23, 2026</span>
+  </div>
+
+  <div id="canvas-container"></div>
+
+  <script>
+    let spacing = 25; 
+    let zoff = 0; 
+
+    function setup() {
+      let canvas = createCanvas(600, 600);
+      canvas.parent('canvas-container');
+      background(248, 246, 240); 
+      noFill();
+    }
+
+    function draw() {
+      background(248, 246, 240, 15); 
+      stroke(40, 55, 85, 30); 
+      strokeWeight(1);
+
+      let cols = width / spacing;
+      let rows = height / spacing;
+
+      for (let y = 1; y < rows; y++) {
+        for (let x = 1; x < cols; x++) {
+          let baseX = x * spacing;
+          let baseY = y * spacing;
+          let noiseVal = noise(x * 0.1, y * 0.1, zoff);
+          let angle = noiseVal * TWO_PI * 4;
+          let displaceMag = map(noiseVal, 0, 1, -20, 20);
+          let d = dist(baseX, baseY, width / 2, height / 2);
+          let effect = map(d, 0, width / 2.5, 1, 0); 
+          if (effect < 0) effect = 0;
+
+          let finalX = baseX + cos(angle) * displaceMag * effect;
+          let finalY = baseY + sin(angle) * displaceMag * effect;
+          
+          push();
+          translate(finalX, finalY);
+          rotate(angle);
+          line(-6, 0, 6, 0); 
+          pop();
+        }
+      }
+      zoff += 0.003; 
+
+      push();
+      fill(150, 150);
+      noStroke();
+      textSize(9);
+      textAlign(RIGHT, BOTTOM);
+      text("Dialectics of Form - Point 1", width - 15, height - 15);
+      pop();
+    }
+  </script>
+
+</body>
+</html>
